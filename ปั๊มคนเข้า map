@@ -1,0 +1,68 @@
+-- [[ CONFIGURATION ]] --
+local ownerName = "ribz75edgi51" -- ชื่อลูกพี่ (ไอดีหลักของเอง)
+local player = game:GetService("Players").LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local root = character:WaitForChild("HumanoidRootPart")
+
+-- [[ UI DESIGN ]] --
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game:GetService("CoreGui")
+local Main = Instance.new("Frame")
+Main.Size = UDim2.new(0, 200, 0, 100)
+Main.Position = UDim2.new(0, 10, 0.5, -50) -- ไว้ซ้ายจอจะได้ไม่บัง
+Main.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Main.Parent = ScreenGui
+Main.Active = true
+Main.Draggable = true
+
+local Status = Instance.new("TextLabel")
+Status.Size = UDim2.new(1, 0, 0, 40)
+Status.Text = "สถานะบอท: " .. player.Name
+Status.Parent = Main
+Status.TextColor3 = Color3.fromRGB(255, 255, 255)
+Status.BackgroundTransparency = 1
+
+local JoinBtn = Instance.new("TextButton")
+JoinBtn.Size = UDim2.new(0.9, 0, 0.4, 0)
+JoinBtn.Position = UDim2.new(0.05, 0, 0.5, 0)
+JoinBtn.Text = "เรียกเข้าแมพ (Follow Owner)"
+JoinBtn.Parent = Main
+JoinBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 0)
+JoinBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+
+-- [[ LOGIC: FOLLOW & ANTI-AFK ]] --
+local following = false
+
+JoinBtn.MouseButton1Click:Connect(function()
+    following = not following
+    JoinBtn.Text = following and "กำลังติดตาม... (ON)" or "เรียกเข้าแมพ (OFF)"
+    JoinBtn.BackgroundColor3 = following and Color3.fromRGB(150, 0, 0) or Color3.fromRGB(0, 120, 0)
+end)
+
+-- ปิดภาพ 3D เพื่อไม่ให้เครื่องค้าง (สำคัญมากสำหรับ 10 จอ!)
+game:GetService("RunService"):Set3dRenderingEnabled(false) 
+settings().Rendering.QualityLevel = 1
+
+task.spawn(function()
+    while task.wait(0.5) do
+        if following then
+            pcall(function()
+                local owner = game.Players:FindFirstChild(ownerName)
+                if owner and owner.Character and owner.Character:FindFirstChild("HumanoidRootPart") then
+                    -- วาร์ปบอทไปจุดที่ลูกพี่อยู่ (กระจายตัวรอบๆ)
+                    local offset = Vector3.new(math.random(-5, 5), 0, math.random(-5, 5))
+                    root.CFrame = owner.Character.HumanoidRootPart.CFrame * CFrame.new(offset)
+                end
+            end)
+        end
+    end
+end)
+
+-- ป้องกันโดนเตะออกจากเซิร์ฟ
+player.Idled:Connect(function()
+    game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+    task.wait(1)
+    game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+end)
+
+print("บอท " .. player.Name .. " พร้อมรับคำสั่งลูกพี่แล้วคับ!")
