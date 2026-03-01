@@ -1,0 +1,63 @@
+-- [[ ALL-IN-ONE BOT CONTROL SYSTEM ]] --
+repeat wait() until game:IsLoaded()
+
+local player = game:GetService("Players").LocalPlayer
+local ownerName = "ribz75edgi51" -- ชื่อไอดีหลักของเอง
+local cmdName = "BotCommand_Summon_" .. ownerName
+
+-- สร้างช่องทางสื่อสาร (ถ้ายังไม่มี)
+if not game:GetService("ReplicatedStorage"):FindFirstChild(cmdName) then
+    local cmd = Instance.new("StringValue")
+    cmd.Name = cmdName
+    cmd.Parent = game:GetService("ReplicatedStorage")
+end
+local cmd = game:GetService("ReplicatedStorage")[cmdName]
+
+-- [[ ฟังก์ชันป้องกัน AFK สำหรับทุกไอดี ]] --
+player.Idled:Connect(function()
+    game:GetService("VirtualUser"):Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+    task.wait(1)
+    game:GetService("VirtualUser"):Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+end)
+
+-- ==========================================
+-- [1] ถ้าเป็น "ไอดีหลัก" (คนสั่งการ)
+-- ==========================================
+if player.Name == ownerName then
+    local ScreenGui = Instance.new("ScreenGui", game:GetService("CoreGui"))
+    local MainBtn = Instance.new("TextButton", ScreenGui)
+    MainBtn.Size = UDim2.new(0, 200, 0, 60)
+    MainBtn.Position = UDim2.new(0.5, -100, 0.1, 0)
+    MainBtn.Text = "เรียกกองทัพบอท! (Summon)"
+    MainBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+    MainBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    MainBtn.Draggable = true
+
+    MainBtn.MouseButton1Click:Connect(function()
+        cmd.Value = "SUMMON_" .. tick()
+        MainBtn.Text = "ส่งสัญญาณแล้ว!"
+        task.wait(1)
+        MainBtn.Text = "เรียกกองทัพบอท! (Summon)"
+    end)
+    print("ไอดีหลักโหลดเสร็จแล้ว! พร้อมสั่งการคับเอง")
+
+-- ==========================================
+-- [2] ถ้าเป็น "ไอดีบอท" (ผู้ติดตาม)
+-- ==========================================
+else
+    -- โหมดประหยัดทรัพยากร (Ghost Mode)
+    game:GetService("RunService"):Set3dRenderingEnabled(false)
+    settings().Rendering.QualityLevel = 1
+    
+    -- รอรับคำสั่ง
+    cmd.Changed:Connect(function()
+        local owner = game.Players:FindFirstChild(ownerName)
+        if owner and owner.Character and owner.Character:FindFirstChild("HumanoidRootPart") then
+            local myRoot = player.Character:WaitForChild("HumanoidRootPart")
+            -- วาร์ปไปหาลูกพี่ (สุ่มตำแหน่งรอบตัว)
+            local offset = Vector3.new(math.random(-7, 7), 0, math.random(-7, 7))
+            myRoot.CFrame = owner.Character.HumanoidRootPart.CFrame * CFrame.new(offset)
+        end
+    end)
+    print("บอท " .. player.Name .. " เข้าสู่โหมดสแตนด์บาย")
+end
