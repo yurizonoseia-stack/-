@@ -1,0 +1,28 @@
+-- สร้างหน้าจอหลัก
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "Win11_Mobile_UI"
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- สร้าง Taskbar (แถบด้านล่างเหมือนในรูป Windows 11)
+local Taskbar = Instance.new("Frame")
+Taskbar.Size = UDim2.new(1, 0, 0, 45)
+Taskbar.Position = UDim2.new(0, 0, 1, -45)
+Taskbar.BackgroundColor3 = Color3.fromRGB(20, 20, 20) -- สีเข้มแบบ Dark Mode
+Taskbar.BackgroundTransparency = 0.2
+Taskbar.Parent = ScreenGui
+
+-- ปุ่ม Start (ตรงกลาง)
+local StartButton = Instance.new("ImageButton")
+StartButton.Size = UDim2.new(0, 35, 0, 35)
+StartButton.Position = UDim2.new(0.5, -17, 0.5, -17)
+StartButton.Image = "rbxassetid://12345678" -- เองต้องหา ID โลโก้ Windows มาใส่
+StartButton.Parent = Taskbar
+
+-- ส่วนแสดงลิงก์ Discord ของเอง
+local DiscordLabel = Instance.new("TextLabel")
+DiscordLabel.Size = UDim2.new(0, 200, 0, 20)
+DiscordLabel.Position = UDim2.new(0.5, -100, 0, -30)
+DiscordLabel.Text = "Discord: discord.gg/JWYKFpeC5P" -- ลิงก์ดิสคอร์ดของเอง
+DiscordLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+DiscordLabel.BackgroundTransparency = 1
+DiscordLabel.Parent = Taskbar
