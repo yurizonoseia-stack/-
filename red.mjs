@@ -1,8 +1,6 @@
 import { Client as BotClient, GatewayIntentBits, Events, EmbedBuilder, AuditLogEvent } from "discord.js";
-import { Client as UserClient } from "discord.js-selfbot-v13";
 
 const BOT_TOKEN = "MTUyNTc3NjUyNTIwOTYzMjg3OQ.GO2zr5.Ojhz7-cWMpKGztd4ctSUS9-uE40paOGE9ln7PA";
-const USER_TOKEN = "MTE0OTUwMjM4MTIxODg3MzQyNQ.GqzO5u.q9FtFcDBqYpbfRGgzHVKTN2IdDMzeg9ZFRWHs4";
 const GROQ_API_KEY = "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";
 
 const BOT_CHAT_CHANNEL_ID = "1527300945384313065";
@@ -126,52 +124,6 @@ bot.on(Events.MessageDelete, async (message) => {
   }
 });
 
-const userClient = new UserClient({
-  checkUpdate: false,
-  ws: {
-    properties: {
-      $os: "android",
-      $browser: "Discord Android",
-      $device: "Discord Android"
-    }
-  }
-});
-
-function updateStatus() {
-  const now = new Date();
-  const timeString = now.toLocaleTimeString("th-TH", {
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false,
-    timeZone: "Asia/Bangkok"
-  });
-  const dateString = now.toLocaleDateString("th-TH", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    timeZone: "Asia/Bangkok"
-  });
-
-  userClient.user.setPresence({
-    activities: [
-      {
-        name: `เวลา: ${timeString} | 📅 ${dateString}`,
-        type: "WATCHING"
-      }
-    ],
-    status: "online"
-  });
-}
-
-userClient.on("ready", () => {
-  console.log(`📱 User Mobile Status พร้อมทำงานแล้ว: ${userClient.user.tag}`);
-  updateStatus();
-  setInterval(updateStatus, 10000);
-});
-
 bot.once(Events.ClientReady, (c) => console.log(`⚡️ Bot Red พร้อมใช้งานแล้ว! — ${c.user.tag}`));
 
 bot.login(BOT_TOKEN);
-userClient.login(USER_TOKEN);
-       
