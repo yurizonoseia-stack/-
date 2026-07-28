@@ -1,6 +1,6 @@
 import { Client as BotClient, GatewayIntentBits, Events, EmbedBuilder, AuditLogEvent } from "discord.js";
 
-const BOT_TOKEN = "MTUyNTc3NjUyNTIwOTYzMjg3OQ.GO2zr5.Ojhz7-cWMpKGztd4ctSUS9-uE40paOGE9ln7PA";
+const BOT_TOKEN = "MTUyNTc3NjUyNTIwOTYzMjg3OQ.GKFqLL.Z6464vWPoPVVRmi1F3wMog-nCUmXMiBHtzHvDQ";
 const GROQ_API_KEY = "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";
 
 const BOT_CHAT_CHANNEL_ID = "1527300945384313065";
