@@ -1,0 +1,13 @@
+{
+  "name": "red-bot",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "red.mjs",
+  "scripts": {
+    "start": "node red.mjs"
+  },
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "discord.js-selfbot-v13": "^3.4.2"
+  }
+}
